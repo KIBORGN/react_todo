@@ -5,22 +5,42 @@ import Input from './Components/Input';
 import List from './Components/List';
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [activeTodos, setActiveTodos] = useState([]);
+  const [completeTodos, setCompleteTodos] = useState([]);
 
-  const addTodo = text => {
+
+  const addActiveTodo = text => {
     const newTodo = {
+      id: Date.now(),
       text
     }
 
-    setTodos([newTodo, ...todos])
+    setActiveTodos([newTodo, ...activeTodos])
+  }
+
+  const deleteActiveTodos = id => {
+    setActiveTodos(activeTodos.filter(todo => todo.id !== id));
+  }
+  const deleteCompleteTodos = id => {
+    setCompleteTodos(completeTodos.filter(todo => todo.id !== id));
   }
 
   return (
+    
     <div className="App">
       <div className="wrapper">
-        <h1>TodoList</h1>
-        <Input addTodo={addTodo}/>
-        <List todos={todos}/>
+        
+        <h2>Active Task</h2>
+        <Input addTodo={addActiveTodo}/>
+        <List todos={activeTodos}
+          deleteTodo = {deleteActiveTodos}
+        />
+      </div>
+      <div className="wrapper">
+        <h2>Completed Task</h2>
+        <List todos={completeTodos}
+          deleteTodo = {deleteCompleteTodos}
+        />
       </div>
     </div>
   );
