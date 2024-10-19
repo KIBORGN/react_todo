@@ -5,25 +5,32 @@ import Input from './Components/Input';
 import List from './Components/List';
 
 function App() {
-  const [activeTodos, setActiveTodos] = useState([]);
-  const [completeTodos, setCompleteTodos] = useState([]);
+  const [todos, setTodos] = useState([]);
 
 
-  const addActiveTodo = text => {
+  const addTodo = text => {
     const newTodo = {
       id: Date.now(),
-      text
-    }
+      text,
+      completed: false,
+    };
+    setTodos([newTodo, ...todos]);
+  };
 
-    setActiveTodos([newTodo, ...activeTodos])
-  }
+  const toggleComplete = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
 
-  const deleteActiveTodos = id => {
-    setActiveTodos(activeTodos.filter(todo => todo.id !== id));
-  }
-  const deleteCompleteTodos = id => {
-    setCompleteTodos(completeTodos.filter(todo => todo.id !== id));
-  }
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const activeTodos = todos.filter((todo) => !todo.completed);
+  const completedTodos = todos.filter((todo) => todo.completed);
 
   return (
     
@@ -31,15 +38,17 @@ function App() {
       <div className="wrapper">
         
         <h2>Active Task</h2>
-        <Input addTodo={addActiveTodo}/>
+        <Input addTodo={addTodo}/>
         <List todos={activeTodos}
-          deleteTodo = {deleteActiveTodos}
+          toggleComplete={toggleComplete}
+          deleteTodo = {deleteTodo}
         />
       </div>
       <div className="wrapper">
         <h2>Completed Task</h2>
-        <List todos={completeTodos}
-          deleteTodo = {deleteCompleteTodos}
+        <List todos={completedTodos}
+          toggleComplete={toggleComplete} 
+          deleteTodo = {deleteTodo}
         />
       </div>
     </div>
